@@ -71,7 +71,7 @@ public:
 		state.event = EventType::TRANSFER;
 
 		// Get the next untransfered packet
-		auto packet = std::move(state.untransferred.front());
+		auto packet = state.untransferred.front();
 		state.untransferred.pop_front();
 		
 		// Record next time for transfer
@@ -88,7 +88,7 @@ public:
 		assert(rand && "Rand cannot be null");
 		auto delay = dist(*rand);
 		auto exit = now + delay;
-		state.serverQueue.emplace_back(exit, delay, std::move(packet));
+		state.serverQueue.emplace_back(exit, delay, packet);
 		std::sort(begin(state.serverQueue), end(state.serverQueue));
 
 		state.flag = Flag::NOPRINT;
@@ -96,12 +96,12 @@ public:
 
 };
 
-std::unique_ptr<Actor>
+std::shared_ptr<Actor>
 Actors::MakeUntransferredActor(const Options& opts)
 {
 	assert(opts.meanTimeServerQueue != 0.0f);
 	auto lambda = 1.0f / opts.meanTimeServerQueue;
-	return util::make_unique<UntransferredActor>(
+	return std::make_shared<UntransferredActor>(
 		GetRandEngine(opts), lambda, opts);
 }
 
@@ -143,7 +143,7 @@ public:
 		state.event = EventType::SERVER;
 
 		// Transfer packet from server to client
-		state.clientQueue.emplace_back(item.detach());
+		state.clientQueue.emplace_back(item.getPacket());
 		state.serverQueue.pop_front();
 
 		// Update server transfer speed
@@ -174,12 +174,12 @@ public:
 };
 
 
-std::unique_ptr<Actor>
+std::shared_ptr<Actor>
 Actors::MakeServerQueueActor(const Options& opts)
 {
 	assert(opts.meanTimeClientQueue != 0.0f);
 	auto lambda = 1.0f / opts.meanTimeClientQueue;
-	return util::make_unique<ServerQueueActor>(
+	return std::make_shared<ServerQueueActor>(
 		GetRandEngine(opts), lambda, opts);
 }
 
@@ -236,11 +236,11 @@ public:
 
 
 
-std::unique_ptr<Actor>
+std::shared_ptr<Actor>
 Actors::MakeClientQueueActor(const Options& opts)
 {
 	assert(opts.meanTimeClientQueue != 0.0f);
 	auto lambda = 1.0f / opts.meanTimeClientQueue;
-	return util::make_unique<ClientQueueActor>(
+	return std::make_shared<ClientQueueActor>(
 		GetRandEngine(opts), lambda, opts);
 }

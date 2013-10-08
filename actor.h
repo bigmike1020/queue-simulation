@@ -25,9 +25,9 @@ namespace Actors
 		virtual ~Actor() {}
 	};
 
-	std::unique_ptr<Actor> MakeUntransferredActor(const Options& opts);
-	std::unique_ptr<Actor> MakeServerQueueActor(const Options& opts);
-	std::unique_ptr<Actor> MakeClientQueueActor(const Options& opts);
+	std::shared_ptr<Actor> MakeUntransferredActor(const Options& opts);
+	std::shared_ptr<Actor> MakeServerQueueActor(const Options& opts);
+	std::shared_ptr<Actor> MakeClientQueueActor(const Options& opts);
 
 }
 
