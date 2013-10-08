@@ -56,12 +56,12 @@ public:
 		assert(std::isfinite(lambda));
 	}
 
-	virtual TimeType getTime(const SimState& state) const override
+	virtual TimeType getTime(const SimState& state) const OVERRIDE
 	{
 		return state.nextTransfer;
 	}
 
-	virtual void act(SimState& state) override
+	virtual void act(SimState& state) OVERRIDE
 	{
 		assert(!state.untransferred.empty() && "untransferred queue shouldn't be empty");
 		assert(state.nextTransfer != TIME_INFINITY && "infinite time unexpected");
@@ -123,7 +123,7 @@ public:
 	}
 
 
-	virtual TimeType getTime(const SimState& state) const override
+	virtual TimeType getTime(const SimState& state) const OVERRIDE
 	{
 		if (state.serverQueue.empty())
 			return TIME_INFINITY;
@@ -133,7 +133,7 @@ public:
 		return min->getExitTime();
 	}
 
-	virtual void act(SimState& state) override
+	virtual void act(SimState& state) OVERRIDE
 	{
 		assert(!state.serverQueue.empty() && "server queue cannot be empty");
 
@@ -201,12 +201,12 @@ public:
 		assert(std::isfinite(lambda));
 	}
 
-	virtual TimeType getTime(const SimState& state) const override
+	virtual TimeType getTime(const SimState& state) const OVERRIDE
 	{
 		return state.nextConsume;
 	}
 
-	virtual void act(SimState& state) override
+	virtual void act(SimState& state) OVERRIDE
 	{
 		assert(!state.clientQueue.empty() && "Client queue cannot be empty");
 		assert(state.nextConsume != TIME_INFINITY && "Time cannot be infinity");

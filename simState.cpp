@@ -4,7 +4,7 @@
 #include <sstream>
 
 #include "functions.h"
-#include "types.h"
+#include "defines.h"
 
 std::string str(TransferSpeed speed)
 {
