@@ -9,10 +9,10 @@
 #include "simState.h"
 #include "defines.h"
 
-using std::begin;
-using std::end;
+using util::begin;
+using util::end;
+using util::Logger;
 
-using util::write;
 using Actors::Actor;
 
 std::vector<std::shared_ptr<Actor> > MakeActorList(const Options& opts)
