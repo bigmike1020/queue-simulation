@@ -1,15 +1,10 @@
 #include "functions.h"
 
+#include <iostream>
+
 using namespace util;
 
 Logger::~Logger()
 {
-	const std::string& str = ss.str();
-	std::cout << str << std::endl;
+	std::cout << ss.str() << std::endl;
 }
-
-Logger util::write()
-{
-	return Logger();
-}
-

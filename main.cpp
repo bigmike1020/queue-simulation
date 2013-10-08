@@ -50,12 +50,10 @@ public:
 
 int main(int argc, char *argv[])
 {
-	write() << "Hello World";
-
 	Options opts = readOptions(argc, argv);
 
 	SimState state(opts.packets);
-	write() << state.toString();
+	Logger() << state.toString();
 
 	Comparator<SimState*> comp(&state);
 	auto actors = MakeActorList(opts);
@@ -66,7 +64,7 @@ int main(int argc, char *argv[])
 		auto& nextActor = actors.front();
 		nextActor->act(state);
 
-		write() << state.toString();
+		Logger() << state.toString();
 
 		std::sort(begin(actors), end(actors), comp);
 		nextActor = actors.front();
