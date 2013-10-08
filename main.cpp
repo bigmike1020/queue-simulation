@@ -7,7 +7,7 @@
 #include "functions.h"
 #include "options.h"
 #include "simState.h"
-#include "types.h"
+#include "defines.h"
 
 using std::begin;
 using std::end;
