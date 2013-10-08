@@ -4,6 +4,8 @@
 #include <sstream>
 #include <utility>
 
+#define RETURN(x) -> decltype(x) {return x;}
+
 namespace util{
 
 	struct Logger
@@ -19,6 +21,9 @@ namespace util{
 
 		~Logger();
 	};
+	
+	template<typename T> auto begin(T& t) RETURN(t.begin())
+	template<typename T> auto end(T& t) RETURN(t.end())
 
 } // util::
 

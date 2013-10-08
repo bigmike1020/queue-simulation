@@ -6,6 +6,9 @@
 #include "functions.h"
 #include "defines.h"
 
+using util::begin;
+using util::end;
+
 std::string str(TransferSpeed speed)
 {
 	return (speed == TransferSpeed::HIGH) ? "H" : "L";
@@ -29,7 +32,9 @@ std::string str(EventType event)
 
 std::string ServerQueueItem::toString() const
 {
-	auto ss = util::sstream();
+	std::ostringstream ss;
+	ss.precision(4);
+	ss << std::showpoint;
 	ss << exit << "(" << delay << ")";
 	return ss.str();
 }
@@ -52,7 +57,9 @@ SimState::SimState(int numPackets)
 
 std::string SimState::toString() const
 {
-	auto ss = util::sstream();
+	std::ostringstream ss;
+	ss.precision(4);
+	ss << std::showpoint;
 
 	ss << "[" << mcl << " " << str(event) << "] [" << str(speed) << " ";
 	
@@ -61,10 +68,12 @@ std::string SimState::toString() const
 		
 	ss << "] [";
 	
-	auto ss2 = util::sstream();
-	for (const auto& item : serverQueue)
+	std::ostringstream ss2;
+	ss2.precision(4);
+	ss2 << std::showpoint;
+	for (auto it = begin(serverQueue); it != end(serverQueue); ++it)
 	{
-		ss2 << item.toString() << " ";
+		ss2 << it->toString() << " ";
 	}
 
 	auto str2 = ss2.str();

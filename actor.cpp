@@ -12,14 +12,12 @@ using namespace Actors;
 using std::shared_ptr;
 using std::move;
 
+using util::begin;
+using util::end;
+
 typedef std::mt19937 rand_engine;
 typedef std::exponential_distribution<TimeDiffType> server_distribution;
 typedef std::exponential_distribution<TimeDiffType> client_distribution;
-
-#define RETURN(x) -> decltype(x) {return x;}
-
-template<typename T> auto begin(T& t) RETURN(t.begin())
-template<typename T> auto end(T& t) RETURN(t.end())
 
 inline TimeDiffType time(TransferSpeed speed, const Options& opts)
 {
