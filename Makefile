@@ -4,10 +4,8 @@ CFLAGS=-std=c++0x -Wall -Werror -Wfatal-errors
 
 default: simulate
 
-%.o: %.cpp
-	$(CC) -c -o $@ $< $(CFLAGS)
-simulate: *.o
-	$(CC) -o simulate $(CFLAGS) *.o
+simulate: *.cpp
+	$(CC) -o simulate $(CFLAGS) *.cpp
 
 .PHONY:clean
 

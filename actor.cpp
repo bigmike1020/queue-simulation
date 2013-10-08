@@ -19,7 +19,7 @@ typedef std::mt19937 rand_engine;
 typedef std::exponential_distribution<TimeDiffType> server_distribution;
 typedef std::exponential_distribution<TimeDiffType> client_distribution;
 
-inline TimeDiffType time(TransferSpeed speed, const Options& opts)
+static TimeDiffType time(TransferSpeed speed, const Options& opts)
 {
 	if (speed == TransferSpeed::HIGH)
 		return opts.arrHigh;
@@ -29,8 +29,8 @@ inline TimeDiffType time(TransferSpeed speed, const Options& opts)
 	return 1.0f;
 }
 
-shared_ptr<rand_engine> randEngine;
-shared_ptr<rand_engine> GetRandEngine(const Options& opts)
+static shared_ptr<rand_engine> randEngine;
+static shared_ptr<rand_engine> GetRandEngine(const Options& opts)
 {
 	if (randEngine) return randEngine;
 
