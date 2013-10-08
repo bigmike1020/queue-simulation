@@ -6,7 +6,7 @@
 #include <string>
 
 #include "packet.h"
-#include "types.h"
+#include "defines.h"
 
 enum class TransferSpeed { HIGH, LOW };
 enum class EventType { TRANSFER = 1, SERVER = 2, CLIENT = 3 };

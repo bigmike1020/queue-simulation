@@ -3,13 +3,12 @@
 #include <memory>
 
 #include "options.h"
-#include "types.h"
+#include "defines.h"
 
 struct SimState;
 
 namespace Actors
 {
-
 	class Actor
 	{
 
@@ -24,12 +23,11 @@ namespace Actors
 		virtual void act(SimState& state) = 0;
 
 		virtual ~Actor() {}
-
 	};
-
 
 	std::unique_ptr<Actor> MakeUntransferredActor(const Options& opts);
 	std::unique_ptr<Actor> MakeServerQueueActor(const Options& opts);
 	std::unique_ptr<Actor> MakeClientQueueActor(const Options& opts);
 
 }
+

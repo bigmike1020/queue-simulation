@@ -1,6 +1,6 @@
 
 CC=g++
-CFLAGS=-std=C++11
+CFLAGS=-std=c++0x
 
 %.o: %.cpp
 	$(CC) -c -o $@ $< $(CFLAGS)

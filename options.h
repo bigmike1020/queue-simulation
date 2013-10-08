@@ -1,5 +1,5 @@
 #pragma once
-#include "types.h"
+#include "defines.h"
 
 struct Options
 {
@@ -16,3 +16,4 @@ struct Options
 };
 
 Options readOptions(int argc, char *argv[]);
+

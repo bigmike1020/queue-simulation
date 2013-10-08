@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include "types.h"
+#include "defines.h"
 
 class Packet
 {
@@ -15,3 +15,4 @@ public:
 	}
 
 };
+
