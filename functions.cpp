@@ -13,11 +13,3 @@ Logger util::write()
 	return Logger();
 }
 
-std::ostringstream util::sstream()
-{
-	std::ostringstream ss;
-	ss.precision(4);
-	ss << std::showpoint;
-	return ss;
-}
-

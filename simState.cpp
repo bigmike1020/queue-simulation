@@ -27,18 +27,6 @@ std::string str(EventType event)
 	return ss.str();
 }
 
-ServerQueueItem::ServerQueueItem(ServerQueueItem&& rhs)
-	: exit(rhs.exit), delay(rhs.delay), packet(move(rhs.packet))
-{}
-
-ServerQueueItem& ServerQueueItem::operator=(ServerQueueItem&& rhs)
-{
-	exit = rhs.exit;
-	delay = rhs.delay;
-	packet = move(rhs.packet);
-	return *this;
-}
-
 std::string ServerQueueItem::toString() const
 {
 	auto ss = util::sstream();
@@ -56,7 +44,7 @@ SimState::SimState(int numPackets)
 {
 	for (int i = 1; i <= numPackets; ++i)
 	{
-		untransferred.emplace_back(util::make_unique<Packet>(i));
+		untransferred.emplace_back(i);
 	}
 
 	nextTransfer = TIME_BEGIN;

@@ -1,6 +1,6 @@
 
 CC=g++
-CFLAGS=-std=c++0x
+CFLAGS=-std=c++0x -Wall -Werror -Wfatal-errors
 
 %.o: %.cpp
 	$(CC) -c -o $@ $< $(CFLAGS)

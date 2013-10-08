@@ -41,6 +41,25 @@ namespace util{
 
 	Logger write();
 
-	std::ostringstream sstream();
+	class sstream
+	{
+		std::ostringstream ss;
+	public:
+		sstream()
+		{
+			ss.precision(4);
+			ss << std::showpoint;
+		}
+
+		template<typename T>
+		sstream& operator<<(const T& t)
+		{
+			ss << t;
+			return *this;
+		}
+
+		std::string str() const { return ss.str()
+	}
 
 } // util::
+

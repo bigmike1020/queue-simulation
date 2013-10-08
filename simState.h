@@ -18,21 +18,16 @@ class ServerQueueItem
 {
 	TimeType exit;
 	TimeDiffType delay;
-	std::unique_ptr<Packet> packet;
+	Packet packet;
 
 public:
-	ServerQueueItem(TimeType exitTime, TimeDiffType delay, std::unique_ptr<Packet> packetPtr)
-		: exit(exitTime), delay(delay), packet(std::move(packetPtr))
-	{
-		assert(packet && "packet null in ServerQueueItem::ServerQueueItem");
-	}
-
-	ServerQueueItem(ServerQueueItem&& rhs);
-	ServerQueueItem& operator=(ServerQueueItem&& rhs);
+	ServerQueueItem(TimeType exitTime, TimeDiffType delay, Packet& packet)
+		: exit(exitTime), delay(delay), packet(packet)
+	{}
 
 	TimeType getExitTime() const { return exit; }
 
-	std::unique_ptr<Packet> detach() { return std::move(packet); }
+	const Packet& getPacket() const { return packet; }
 
 	bool operator<(const ServerQueueItem& that) const
 	{
@@ -40,7 +35,6 @@ public:
 	}
 
 	std::string toString() const;
-
 };
 
 struct SimState
@@ -51,12 +45,12 @@ struct SimState
 
 	TransferSpeed speed;
 	TimeType nextTransfer;
-	std::deque<std::unique_ptr<Packet> > untransferred;
+	std::deque<Packet> untransferred;
 
 	std::deque<ServerQueueItem> serverQueue;
 
 	TimeType nextConsume;
-	std::deque<std::unique_ptr<Packet> > clientQueue;
+	std::deque<Packet> clientQueue;
 
 	// Set to UP or DOWN when client transfers happen
 	Flag flag;
