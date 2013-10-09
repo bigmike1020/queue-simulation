@@ -126,6 +126,5 @@ Options readOptions(int argc, char *argv[])
 	assert(opts.thresholdLow <= opts.thresholdHigh 
 		&& "Low threshold cannot be greater than high threshold");
 
-	std::cout << opts.meanTimeServerQueue << std::endl;
 	return opts;
 }

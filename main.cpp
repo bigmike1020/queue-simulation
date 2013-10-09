@@ -15,16 +15,11 @@ using Actors::Actor;
 
 std::vector<std::shared_ptr<Actor> > MakeActorList(const Options& opts)
 {
-	std::shared_ptr<Actor> 
-		untransferedActor = Actors::MakeUntransferredActor(opts),
-		serverQueueActor = Actors::MakeServerQueueActor(opts),
-		clientQueueActor = Actors::MakeClientQueueActor(opts);
-
-	std::vector<std::shared_ptr<Actor> > actors = {
-		untransferedActor, serverQueueActor, clientQueueActor
+	return {
+		Actors::MakeUntransferredActor(opts),
+		Actors::MakeServerQueueActor(opts), 
+		Actors::MakeClientQueueActor(opts)
 	};
-
-	return actors;
 }
 
 template<typename StatePtr>
@@ -56,9 +51,10 @@ int main(int argc, char *argv[])
 	Comparator<SimState*> comp(&state);
 	auto actors = MakeActorList(opts);
 
-	std::sort(begin(actors), end(actors), comp);
-	auto nextActor = actors.front();
+	std::deque<SimState> stateHistory = {state};
 	
+	std::sort(begin(actors), end(actors), comp);
+	std::shared_ptr<Actor> nextActor;
 	while (!(nextActor = actors.front())->finished(state))
 	{
 		auto now = nextActor->getTime(state);
@@ -66,6 +62,7 @@ int main(int argc, char *argv[])
 		assert(now < TIME_INFINITY);
 		
 		nextActor->act(state);
+		stateHistory.emplace_back(state);
 
 		Logger() << state.toString();
 
