@@ -39,7 +39,7 @@ std::string ServerQueueItem::toString() const
 	return ss.str();
 }
 
-SimState::SimState(int numPackets)
+SimState::SimState(const Options& opts)
 	: mcl(0.0f)
 	, event(EventType::TRANSFER)
 	, speed(TransferSpeed::HIGH)
@@ -47,9 +47,11 @@ SimState::SimState(int numPackets)
 	, nextConsume(TIME_INFINITY)
 	, flag(Flag::NOPRINT)
 {
-	for (int i = 1; i <= numPackets; ++i)
+	PacketFactory factory(opts);
+
+	for (int i = 0; i <= opts.packets; ++i)
 	{
-		untransferred.emplace_back(i);
+		untransferred.emplace_back(factory());
 	}
 
 	nextTransfer = TIME_BEGIN;

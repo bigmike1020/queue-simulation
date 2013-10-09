@@ -25,10 +25,8 @@ public:
 	friend class PacketFactory;
 };
 
-PacketFactory
+class PacketFactory
 {
-	Options opts;
-	
 	// Copy of all the packets made
 	std::deque<Packet> allPackets;
 	
@@ -40,4 +38,4 @@ public:
 	Packet operator()();
 	
 	std::string stats() const;
-}
+};

@@ -5,6 +5,7 @@
 #include <deque>
 #include <string>
 
+#include "options.h"
 #include "packet.h"
 #include "defines.h"
 
@@ -55,7 +56,7 @@ struct SimState
 	// Set to UP or DOWN when client transfers happen
 	Flag flag;
 
-	SimState(int numPackets);
+	SimState(const Options& opts);
 
 	std::string toString() const;
 };

@@ -13,9 +13,9 @@ Packet::Packet(TimeDiff server, TimeDiff client)
 }
 
 PacketFactory::PacketFactory(const Options& opts)
-	: opts(opts)
-	, server_dist(1.0f / opts.meanTimeServerQueue)
+	: server_dist(1.0f / opts.meanTimeServerQueue)
 	, client_dist(1.0f / opts.meanTimeClientQueue)
+{}
 
 Packet PacketFactory::operator()()
 {

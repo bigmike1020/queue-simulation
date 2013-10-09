@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 {
 	Options opts = readOptions(argc, argv);
 
-	SimState state(opts.packets);
+	SimState state(opts);
 	Logger() << state.toString();
 
 	Comparator<SimState*> comp(&state);
