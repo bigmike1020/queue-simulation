@@ -53,8 +53,6 @@ void printUsage(int argc, char *argv[])
 
 Options readOptions(int argc, char *argv[])
 {
-	Options opts{};
-
 	static struct option long_options[] = {
 		{ "packets", required_argument, nullptr, 'p' },
 		{ "arrHigh", required_argument, nullptr, 'h' },
@@ -68,7 +66,7 @@ Options readOptions(int argc, char *argv[])
 		{ 0, 0, nullptr, 0 }
 	};
 
-	Options res = Options();
+	Options opts{};
 
 	while (true) {
 		int option_index = 0;
@@ -80,28 +78,28 @@ Options readOptions(int argc, char *argv[])
 
 		switch (c) {
 		case 'p':
-			res.packets = atoi(optarg);
+			opts.packets = atoi(optarg);
 			break;
 		case 'h':
-			res.arrHigh = atof(optarg);
+			opts.arrHigh = atof(optarg);
 			break;
 		case 'l':
-			res.arrLow = atof(optarg);
+			opts.arrLow = atof(optarg);
 			break;
 		case 's':
-			res.meanTimeServerQueue = atof(optarg);
+			opts.meanTimeServerQueue = atof(optarg);
 			break;
 		case 'c':
-			res.meanTimeClientQueue = atof(optarg);
+			opts.meanTimeClientQueue = atof(optarg);
 			break;
 		case 't':
-			res.thresholdLow = atoi(optarg);
+			opts.thresholdLow = atoi(optarg);
 			break;
 		case 'u':
-			res.thresholdHigh = atoi(optarg);
+			opts.thresholdHigh = atoi(optarg);
 			break;
 		case 'r':
-			res.seed = atoi(optarg);
+			opts.seed = atoi(optarg);
 			break;
 		case '?':
 		default:
@@ -124,5 +122,6 @@ Options readOptions(int argc, char *argv[])
 	assert(opts.thresholdLow <= opts.thresholdHigh 
 		&& "Low threshold cannot be greater than high threshold");
 
-	return res;
+	std::cout << opts.meanTimeServerQueue << std::endl;
+	return opts;
 }
