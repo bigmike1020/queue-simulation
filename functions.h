@@ -32,7 +32,10 @@ namespace util{
 			Number lambda;
 	public:
 			exponential_distribution(Number lambda) : lambda(lambda)
-			{}
+			{
+				assert(std::isfinite(lambda));
+				assert(lambda > 0.0f);
+			}
 
 			template<typename R>
 			float operator()(R&& rand) const{
