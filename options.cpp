@@ -27,15 +27,19 @@ void printUsage(int argc, char *argv[])
 	std::cerr <<
 "Usage: " << argv[0] << " [options]\n"
 "Options:\n"
-"  -p\n"
+"  -p \n"
 "  --packets     Number of packets that departed from the client queue. \n"
 "                (default N=30) \n"
+"  -h \n"
 "  --arrHigh     Time to transmit a packet from the server at high rate. \n"
 "                (default D_H=1.0) \n"
+"  -l \n"
 "  --arrLow      Time to transmit a packet from the server at low rate. \n"
 "                (default D_L=2.0) \n"
+"  -s \n"
 "  --serverMean  Mean service time in the infinite server queue. \n"
 "                (default 1/\u03BC_d=10.0) \n"
+"  -c \n"
 "  --clientMean  Mean service time in the client queue. \n"
 "                (default 1/\u03BC_q=1.5) \n"
 "  --thresLow    Low threshold level in the server queue. \n"
@@ -69,7 +73,7 @@ Options readOptions(int argc, char *argv[])
 	while (true) {
 		int option_index = 0;
 
-		int c = getopt_long(argc, argv, "p:h:l:s:c:t:u:v",
+		int c = getopt_long(argc, argv, "p:h:l:s:c:",
 			long_options, &option_index);
 		if (c == -1)
 			break;
