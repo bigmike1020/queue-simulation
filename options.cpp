@@ -31,11 +31,11 @@ void printUsage(int argc, char *argv[])
 "  --packets     Number of packets that departed from the client queue. \n"
 "                (default N=30) \n"
 "  --arrHigh     Time to transmit a packet from the server at high rate. \n"
-"                (default D_H=1) \n"
+"                (default D_H=1.0) \n"
 "  --arrLow      Time to transmit a packet from the server at low rate. \n"
-"                (default D_L=2) \n"
+"                (default D_L=2.0) \n"
 "  --serverMean  Mean service time in the infinite server queue. \n"
-"                (default 1/\u03BC_d=10) \n"
+"                (default 1/\u03BC_d=10.0) \n"
 "  --clientMean  Mean service time in the client queue. \n"
 "                (default 1/\u03BC_q=1.5) \n"
 "  --thresLow    Low threshold level in the server queue. \n"
@@ -75,35 +75,26 @@ Options readOptions(int argc, char *argv[])
 			break;
 
 		switch (c) {
-		case 0:
-			break;
 		case 'p':
 			res.packets = atoi(optarg);
-			assert(res.packets > 0 && "Packets argument must be > 0");
 			break;
 		case 'h':
 			res.arrHigh = atof(optarg);
-			assert(res.arrHigh > 0 && "Arrival time arguments must be > 0");
 			break;
 		case 'l':
 			res.arrLow = atof(optarg);
-			assert(res.arrLow > 0 && "Arrival time arguments must be > 0");
 			break;
 		case 's':
 			res.meanTimeServerQueue = atof(optarg);
-			assert(res.meanTimeServerQueue > 0 && "Queue times must be > 0");
 			break;
 		case 'c':
 			res.meanTimeClientQueue = atof(optarg);
-			assert(res.meanTimeClientQueue > 0 && "Queue times must be > 0");
 			break;
 		case 't':
 			res.thresholdLow = atoi(optarg);
-			assert(res.thresholdLow >= 0 && "Low threshold must be >= 0");
 			break;
 		case 'u':
 			res.thresholdHigh = atoi(optarg);
-			assert(res.thresholdHigh >= 0 && "High threshold must be >= 0");
 			break;
 		case 'r':
 			res.seed = atoi(optarg);
@@ -116,16 +107,18 @@ Options readOptions(int argc, char *argv[])
 		}
 	}
 	
-	assert(opts.packets > 0);
-	assert(opts.arrHigh > 0);
-	assert(opts.arrLow > 0);
-	assert(opts.arrHigh <= opts.arrLow);
-	assert(opts.meanTimeServerQueue > 0);
-	assert(opts.meanTimeClientQueue > 0);
+	assert(opts.packets > 0 && "Packet count must be > 0");
+	assert(opts.arrHigh > 0.0f && "Arrival time must be > 0");
+	assert(opts.arrLow > 0.0f && "Arrival time must be > 0");
+	assert(opts.arrHigh <= opts.arrLow 
+		&& "Fast arrival time must be less than slow arrival time");
+	assert(opts.meanTimeServerQueue > 0.0f && "Queue times must be > 0");
+	assert(opts.meanTimeClientQueue > 0.0f && "Queue times must be > 0");
 
-	assert(opts.thresholdLow > 0);
-	assert(opts.thresholdHigh > 0);
-	assert(opts.thresholdLow <= opts.thresholdHigh);
+	assert(opts.thresholdLow >= 0 && "Low threshold must be >= 0");
+	assert(opts.thresholdHigh >= 0 && "High threshold must be >= 0");
+	assert(opts.thresholdLow <= opts.thresholdHigh 
+		&& "Low threshold cannot be greater than high threshold");
 
 	return res;
 }
