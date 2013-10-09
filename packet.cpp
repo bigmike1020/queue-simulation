@@ -1,10 +1,7 @@
 #include "packet.h"
 
 #include <deque>
-#include <random>
 #include <sstream>
-
-static std::mt19937 rand_engine;
 
 Packet::Packet(TimeDiff server, TimeDiff client)
 	: server(server), client(client)
@@ -14,7 +11,8 @@ Packet::Packet(TimeDiff server, TimeDiff client)
 }
 
 PacketFactory::PacketFactory(const Options& opts)
-	: server_dist(1.0f / opts.meanTimeServerQueue)
+	: rand_engine(opts.seed)
+	, server_dist(1.0f / opts.meanTimeServerQueue)
 	, client_dist(1.0f / opts.meanTimeClientQueue)
 {}
 

@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <deque>
+#include <random>
 #include <string>
 
 #include "defines.h"
@@ -27,15 +28,11 @@ public:
 
 class PacketFactory
 {
-	// Copy of all the packets made
-	std::deque<Packet> packets;
-	
+	std::mt19937 rand_engine;
 	util::exponential_distribution<TimeDiff> server_dist;
 	util::exponential_distribution<TimeDiff> client_dist;
 public:
 	
 	PacketFactory(const Options& opts);
 	Packet operator()();
-	
-	std::string stats() const;
 };

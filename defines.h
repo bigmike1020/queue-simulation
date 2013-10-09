@@ -4,6 +4,10 @@
 #define OVERRIDE
 #endif
 
+#ifndef nullptr
+#define nullptr NULL
+#endif
+
 typedef float Time;
 typedef float TimeDiff;
 typedef float InvTimeDiff;
