@@ -1,8 +1,6 @@
 #include "actor.h"
 
 #include <algorithm>
-#include <cmath>
-#include <random>
 
 #include "functions.h"
 #include "simState.h"
@@ -15,10 +13,6 @@ using std::move;
 using util::begin;
 using util::end;
 
-typedef std::mt19937 rand_engine;
-typedef util::exponential_distribution<TimeDiff> server_distribution;
-typedef util::exponential_distribution<TimeDiff> client_distribution;
-
 static TimeDiff time(TransferSpeed speed, const Options& opts)
 {
 	if (speed == TransferSpeed::HIGH)
@@ -29,30 +23,14 @@ static TimeDiff time(TransferSpeed speed, const Options& opts)
 	return 1.0f;
 }
 
-static shared_ptr<rand_engine> randEngine;
-static shared_ptr<rand_engine> GetRandEngine(const Options& opts)
-{
-	if (randEngine) return randEngine;
-	return (randEngine = std::make_shared<rand_engine>(opts.seed));
-}
-
 class UntransferredActor : public Actor
 {
-	shared_ptr<rand_engine> rand;
-	server_distribution dist;
-
 	Options opts;
 
 public:
 
-	UntransferredActor(shared_ptr<rand_engine> rand, 
-		InvTimeDiff lambda, const Options& opts)
-		: rand(rand), dist(lambda), opts(opts)
-	{
-		assert(rand && "Rand cannot be null");
-		assert(std::isfinite(lambda));
-		assert(lambda > 0.0f);
-	}
+	UntransferredActor(const Options& opts) : opts(opts)
+	{}
 
 	virtual Time getTime(const SimState& state) const OVERRIDE
 	{
@@ -85,8 +63,7 @@ public:
 		}
 
 		// Move untransfered packet into queue
-		assert(rand && "Rand cannot be null");
-		auto delay = dist(*rand);
+		auto delay = packet.getServerTime();
 		auto exit = now + delay;
 		state.serverQueue.emplace_back(exit, delay, packet);
 		std::sort(begin(state.serverQueue), end(state.serverQueue));
@@ -99,29 +76,17 @@ public:
 std::shared_ptr<Actor>
 Actors::MakeUntransferredActor(const Options& opts)
 {
-	assert(opts.meanTimeServerQueue != 0.0f);
-	auto lambda = 1.0f / opts.meanTimeServerQueue;
-	return std::make_shared<UntransferredActor>(
-		GetRandEngine(opts), lambda, opts);
+	return std::make_shared<UntransferredActor>(opts);
 }
 
 class ServerQueueActor : public Actor
 {
-	shared_ptr<rand_engine> rand;
-	client_distribution dist;
-
 	Options opts;
 
 public:
 
-	ServerQueueActor(shared_ptr<rand_engine> rand, 
-		InvTimeDiff lambda, const Options& opts)
-		: rand(rand), dist(lambda), opts(opts)
-	{
-		assert(rand && "Rand cannot be null");
-		assert(std::isfinite(lambda));
-	}
-
+	ServerQueueActor(const Options& opts) : opts(opts)
+	{}
 
 	virtual Time getTime(const SimState& state) const OVERRIDE
 	{
@@ -143,7 +108,8 @@ public:
 		state.event = EventType::SERVER;
 
 		// Transfer packet from server to client
-		state.clientQueue.emplace_back(item.getPacket());
+		auto packet = item.getPacket();
+		state.clientQueue.emplace_back(packet);
 		state.serverQueue.pop_front();
 
 		// Update server transfer speed
@@ -166,9 +132,10 @@ public:
 		// Set time of next client consume
 		if (state.nextConsume == TIME_INFINITY)
 		{
-			assert(rand && "Rand cannot be null");
-			state.nextConsume = now + dist(*rand);
+			assert(state.clientQueue.size() == 1);
+			state.nextConsume = now + packet.getClientTime();
 		}
+		else assert(state.clientQueue.size() > 1);
 	}
 
 };
@@ -177,29 +144,18 @@ public:
 std::shared_ptr<Actor>
 Actors::MakeServerQueueActor(const Options& opts)
 {
-	assert(opts.meanTimeClientQueue != 0.0f);
-	auto lambda = 1.0f / opts.meanTimeClientQueue;
-	return std::make_shared<ServerQueueActor>(
-		GetRandEngine(opts), lambda, opts);
+	return std::make_shared<ServerQueueActor>(opts);
 }
 
 
 class ClientQueueActor : public Actor
 {
-	shared_ptr<rand_engine> rand;
-	client_distribution dist;
-
 	Options opts;
 
 public:
 
-	ClientQueueActor(shared_ptr<rand_engine> rand, 
-		InvTimeDiff lambda, const Options& opts)
-		: rand(rand), dist(lambda), opts(opts)
-	{
-		assert(rand && "Rand cannot be null");
-		assert(std::isfinite(lambda));
-	}
+	ClientQueueActor(const Options& opts) : opts(opts)
+	{}
 
 	virtual Time getTime(const SimState& state) const OVERRIDE
 	{
@@ -209,7 +165,8 @@ public:
 	virtual void act(SimState& state) OVERRIDE
 	{
 		assert(!state.clientQueue.empty() && "Client queue cannot be empty");
-		assert(state.nextConsume != TIME_INFINITY && "Time cannot be infinity");
+		assert(state.nextConsume != TIME_INFINITY 
+			&& "Time cannot be infinity");
 
 		auto now = state.nextConsume;
 		state.mcl = now;
@@ -225,8 +182,8 @@ public:
 		}
 		else
 		{
-			assert(rand && "rand cannot be null");
-			state.nextConsume += dist(*rand);
+			auto& packet = state.clientQueue.front();
+			state.nextConsume += packet.getClientTime();
 		}
 
 		state.flag = Flag::NOPRINT;
@@ -234,13 +191,8 @@ public:
 
 };
 
-
-
 std::shared_ptr<Actor>
 Actors::MakeClientQueueActor(const Options& opts)
 {
-	assert(opts.meanTimeClientQueue != 0.0f);
-	auto lambda = 1.0f / opts.meanTimeClientQueue;
-	return std::make_shared<ClientQueueActor>(
-		GetRandEngine(opts), lambda, opts);
+	return std::make_shared<ClientQueueActor>(opts);
 }

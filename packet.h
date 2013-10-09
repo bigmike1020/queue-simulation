@@ -12,7 +12,7 @@ class PacketFactory;
 
 class Packet
 {
-	// Time spend in server and client queues
+	// Time spent in server and client queues
 	TimeDiff server;
 	TimeDiff client;
 	
