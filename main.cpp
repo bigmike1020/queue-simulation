@@ -59,15 +59,19 @@ int main(int argc, char *argv[])
 	auto actors = MakeActorList(opts);
 
 	std::sort(begin(actors), end(actors), comp);
-	while (!actors.front()->finished(state))
+	auto nextActor = actors.front();
+	
+	while (!(nextActor = actors.front())->finished(state))
 	{
-		auto& nextActor = actors.front();
+		auto now = nextActor->getTime(state);
+		assert(0 < now);
+		assert(now < TIME_INFINITY);
+		
 		nextActor->act(state);
 
 		Logger() << state.toString();
 
 		std::sort(begin(actors), end(actors), comp);
-		nextActor = actors.front();
 	}
 
 	return 0;

@@ -16,8 +16,8 @@ using util::begin;
 using util::end;
 
 typedef std::mt19937 rand_engine;
-typedef std::exponential_distribution<TimeDiffType> server_distribution;
-typedef std::exponential_distribution<TimeDiffType> client_distribution;
+typedef util::exponential_distribution<TimeDiffType> server_distribution;
+typedef util::exponential_distribution<TimeDiffType> client_distribution;
 
 static TimeDiffType time(TransferSpeed speed, const Options& opts)
 {
@@ -33,7 +33,6 @@ static shared_ptr<rand_engine> randEngine;
 static shared_ptr<rand_engine> GetRandEngine(const Options& opts)
 {
 	if (randEngine) return randEngine;
-
 	return (randEngine = std::make_shared<rand_engine>(opts.seed));
 }
 
@@ -52,6 +51,7 @@ public:
 	{
 		assert(rand && "Rand cannot be null");
 		assert(std::isfinite(lambda));
+		assert(lambda > 0.0f);
 	}
 
 	virtual TimeType getTime(const SimState& state) const OVERRIDE
@@ -61,15 +61,17 @@ public:
 
 	virtual void act(SimState& state) OVERRIDE
 	{
-		assert(!state.untransferred.empty() && "untransferred queue shouldn't be empty");
-		assert(state.nextTransfer != TIME_INFINITY && "infinite time unexpected");
+		assert(!state.untransferred.empty() 
+			&& "untransferred queue shouldn't be empty");
+		assert(state.nextTransfer != TIME_INFINITY 
+			&& "infinite time unexpected");
 
 		auto now = state.nextTransfer;
 		state.mcl = now;
 		state.event = EventType::TRANSFER;
 
 		// Get the next untransfered packet
-		auto packet = state.untransferred.front();
+		Packet packet = state.untransferred.front();
 		state.untransferred.pop_front();
 		
 		// Record next time for transfer

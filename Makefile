@@ -1,13 +1,13 @@
 
 CC=g++
-CFLAGS=-std=c++0x -Wall -Werror -Wfatal-errors
+CFLAGS=-std=c++0x -Os -Wall -Werror -Wfatal-errors
 
 default: simulate
 
 simulate: *.cpp
 	$(CC) -o simulate $(CFLAGS) *.cpp
 
-.PHONY:clean
+.PHONY: clean
 
 clean:
-	rm -f *.o
+	rm -f *.o simulate

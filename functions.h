@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <memory>
 #include <sstream>
 #include <utility>
@@ -24,6 +25,23 @@ namespace util{
 	
 	template<typename T> auto begin(T& t) RETURN(t.begin())
 	template<typename T> auto end(T& t) RETURN(t.end())
+	
+	template<typename Number>
+	class exponential_distribution
+	{
+			Number lambda;
+	public:
+			exponential_distribution(Number lambda) : lambda(lambda)
+			{}
+
+			template<typename R>
+			float operator()(R&& rand) const{
+					Number size = rand.max() - rand.min();
+					Number num = (rand() - rand.min()) / size;
+					return -log(num) / lambda;
+			}
+	};
+
 
 } // util::
 

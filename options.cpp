@@ -10,16 +10,16 @@ Options::Options()
 	packets = 30;
 	arrHigh = 1.0f;
 	arrLow = 2.0f;
-	meanTimeServerQueue = 1.0f; // 0.1f;
-	meanTimeClientQueue = float(20.0f / 3.0f);
+	meanTimeServerQueue = 10.0f;
+	meanTimeClientQueue = 1.5f;
 	thresholdLow = 3;
 	thresholdHigh = 3;
-	seed = 2;
+	seed = 45647;
 }
 
 Options readOptions(int, char *[])
 {
-	Options opts;
+	Options opts{};
 
 	assert(opts.packets > 0);
 	assert(opts.arrHigh > 0);
