@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <getopt.h>
 #include <unistd.h>
+#include <iostream>
 
 #include "defines.h"
 
@@ -19,20 +20,36 @@ Options::Options()
 	seed = 45647;
 }
 
+void printUsage(int argc, char *argv[])
+{
+	assert(argc > 0);
+
+	std::cerr <<
+"Usage: " << argv[0] << " [options]\n"
+"Options:\n"
+"  -p\n"
+"  --packets     Number of packets that departed from the client queue. \n"
+"                (default N=30) \n"
+"  --arrHigh     Time to transmit a packet from the server at high rate. \n"
+"                (default D_H=1) \n"
+"  --arrLow      Time to transmit a packet from the server at low rate. \n"
+"                (default D_L=2) \n"
+"  --serverMean  Mean service time in the infinite server queue. \n"
+"                (default 1/\u03BC_d=10) \n"
+"  --clientMean  Mean service time in the client queue. \n"
+"                (default 1/\u03BC_q=1.5) \n"
+"  --thresLow    Low threshold level in the server queue. \n"
+"                (default T_L=3) \n"
+"  --thresHigh   High threshold level in the server queue. \n"
+"                (default T_H=3) \n"
+"  --seed        Pseudorandom number generator seed. (default R=45647) \n"
+"\n"
+"Written by Mike Senn <mpsenn@ncsu.edu>\n";
+}
+
 Options readOptions(int argc, char *argv[])
 {
 	Options opts{};
-
-	assert(opts.packets > 0);
-	assert(opts.arrHigh > 0);
-	assert(opts.arrLow > 0);
-	assert(opts.arrHigh <= opts.arrLow);
-	assert(opts.meanTimeServerQueue > 0);
-	assert(opts.meanTimeClientQueue > 0);
-
-	assert(opts.thresholdLow > 0);
-	assert(opts.thresholdHigh > 0);
-	assert(opts.thresholdLow <= opts.thresholdHigh);
 
 	static struct option long_options[] = {
 		{ "packets", required_argument, nullptr, 'p' },
@@ -93,7 +110,8 @@ Options readOptions(int argc, char *argv[])
 			break;
 		case '?':
 		default:
-			assert(false && "Unrecognized command line parameter");
+			printUsage(argc, argv);
+			exit(1);
 			break;
 		}
 	}
