@@ -27,6 +27,7 @@ public:
 	{}
 
 	Time getExitTime() const { return exit; }
+	Time getDelay() const { return delay; }
 
 	const Packet& getPacket() const { return packet; }
 
@@ -34,8 +35,6 @@ public:
 	{
 		return (exit < that.exit);
 	}
-
-	std::string toString() const;
 };
 
 struct SimState
@@ -57,7 +56,5 @@ struct SimState
 	Flag flag;
 
 	SimState(const Options& opts);
-
-	std::string toString() const;
 };
 

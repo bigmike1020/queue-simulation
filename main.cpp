@@ -5,6 +5,7 @@
 
 #include "actor.h"
 #include "functions.h"
+#include "printer.h"
 #include "simState.h"
 
 using util::begin;
@@ -45,14 +46,13 @@ int main(int argc, char *argv[])
 {
 	Options opts = readOptions(argc, argv);
 
-	SimState state(opts);
-	Logger() << state.toString();
+	SimState state{opts};
+	StateHistory history;
+	history.emplace_back(state);
 
 	Comparator<SimState*> comp(&state);
 	auto actors = MakeActorList(opts);
 
-	std::deque<SimState> stateHistory = {state};
-	
 	std::sort(begin(actors), end(actors), comp);
 	std::shared_ptr<Actor> nextActor;
 	while (!(nextActor = actors.front())->finished(state))
@@ -60,14 +60,14 @@ int main(int argc, char *argv[])
 		auto now = nextActor->getTime(state);
 		assert(0 < now);
 		assert(now < TIME_INFINITY);
-		
-		nextActor->act(state);
-		stateHistory.emplace_back(state);
 
-		Logger() << state.toString();
+		nextActor->act(state);
+		history.emplace_back(state);
 
 		std::sort(begin(actors), end(actors), comp);
 	}
+
+	history.print();
 
 	return 0;
 }
