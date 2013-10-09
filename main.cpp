@@ -5,9 +5,7 @@
 
 #include "actor.h"
 #include "functions.h"
-#include "options.h"
 #include "simState.h"
-#include "defines.h"
 
 using util::begin;
 using util::end;

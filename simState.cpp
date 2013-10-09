@@ -4,10 +4,6 @@
 #include <sstream>
 
 #include "functions.h"
-#include "defines.h"
-
-using util::begin;
-using util::end;
 
 std::string str(TransferSpeed speed)
 {
@@ -73,7 +69,7 @@ std::string SimState::toString() const
 	std::ostringstream ss2;
 	ss2.precision(4);
 	ss2 << std::showpoint;
-	for (auto it = begin(serverQueue); it != end(serverQueue); ++it)
+	for (auto it=util::begin(serverQueue); it != util::end(serverQueue); ++it)
 	{
 		ss2 << it->toString() << " ";
 	}
@@ -91,4 +87,3 @@ std::string SimState::toString() const
 
 	return ss.str();
 }
-
