@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cstdlib>
+#include <cmath>
 #include <getopt.h>
 #include <unistd.h>
 #include <iostream>
@@ -76,21 +77,26 @@ Options readOptions(int argc, char *argv[])
 		if (c == -1)
 			break;
 
+		char *endptr = nullptr;
 		switch (c) {
 		case 'p':
 			opts.packets = atoi(optarg);
 			break;
 		case 'h':
-			opts.arrHigh = atof(optarg);
+			opts.arrHigh = strtof(optarg, &endptr);
+			assert(endptr != optarg && "Unable to parse arrHigh option");
 			break;
 		case 'l':
-			opts.arrLow = atof(optarg);
+			opts.arrLow = strtof(optarg, &endptr);
+			assert(endptr != optarg && "Unable to parse arrLow option");
 			break;
 		case 's':
-			opts.meanTimeServerQueue = atof(optarg);
+			opts.meanTimeServerQueue = strtof(optarg, &endptr);
+			assert(endptr != optarg && "Unable to parse serverMean option");
 			break;
 		case 'c':
-			opts.meanTimeClientQueue = atof(optarg);
+			opts.meanTimeClientQueue = strtof(optarg, &endptr);
+			assert(endptr != optarg && "Unable to parse clientMean option");
 			break;
 		case 't':
 			opts.thresholdLow = atoi(optarg);
@@ -111,11 +117,15 @@ Options readOptions(int argc, char *argv[])
 	
 	assert(opts.packets > 0 && "Packet count must be > 0");
 	assert(opts.arrHigh > 0.0f && "Arrival time must be > 0");
+	assert(std::isfinite(opts.arrHigh));
 	assert(opts.arrLow > 0.0f && "Arrival time must be > 0");
+	assert(std::isfinite(opts.arrLow));
 	assert(opts.arrHigh <= opts.arrLow 
 		&& "Fast arrival time must be less than slow arrival time");
 	assert(opts.meanTimeServerQueue > 0.0f && "Queue times must be > 0");
+	assert(std::isfinite(opts.meanTimeServerQueue));
 	assert(opts.meanTimeClientQueue > 0.0f && "Queue times must be > 0");
+	assert(std::isfinite(opts.meanTimeClientQueue));
 
 	assert(opts.thresholdLow >= 0 && "Low threshold must be >= 0");
 	assert(opts.thresholdHigh >= 0 && "High threshold must be >= 0");
