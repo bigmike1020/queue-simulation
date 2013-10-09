@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <cassert>
-#include <clocale>
 #include <memory>
 #include <vector>
 
@@ -51,8 +50,6 @@ public:
 
 int main(int argc, char *argv[])
 {
-	// setlocale(LC_ALL, "");
-
 	Options opts = readOptions(argc, argv);
 
 	SimState state(opts);
