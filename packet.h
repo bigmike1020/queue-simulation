@@ -28,7 +28,7 @@ public:
 class PacketFactory
 {
 	// Copy of all the packets made
-	std::deque<Packet> allPackets;
+	std::deque<Packet> packets;
 	
 	util::exponential_distribution<TimeDiff> server_dist;
 	util::exponential_distribution<TimeDiff> client_dist;

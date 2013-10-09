@@ -2,6 +2,7 @@
 
 #include <deque>
 #include <random>
+#include <sstream>
 
 static std::mt19937 rand_engine;
 
@@ -23,12 +24,5 @@ Packet PacketFactory::operator()()
 	auto client = client_dist(rand_engine);
 	
 	Packet p(server, client);
-	allPackets.push_back(p);
-
 	return p;
-}
-
-std::string PacketFactory::stats() const
-{
-	return "";
 }

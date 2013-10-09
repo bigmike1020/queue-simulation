@@ -53,7 +53,7 @@ SimState::SimState(const Options& opts)
 	{
 		untransferred.emplace_back(factory());
 	}
-
+	
 	nextTransfer = TIME_BEGIN;
 }
 
