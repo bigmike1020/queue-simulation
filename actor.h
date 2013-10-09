@@ -19,7 +19,7 @@ namespace Actors
 			return getTime(state) == TIME_INFINITY;
 		}
 
-		virtual TimeType getTime(const SimState& state) const = 0;
+		virtual Time getTime(const SimState& state) const = 0;
 		virtual void act(SimState& state) = 0;
 
 		virtual ~Actor() {}

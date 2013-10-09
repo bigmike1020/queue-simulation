@@ -16,16 +16,16 @@ class Packet;
 
 class ServerQueueItem
 {
-	TimeType exit;
-	TimeDiffType delay;
+	Time exit;
+	TimeDiff delay;
 	Packet packet;
 
 public:
-	ServerQueueItem(TimeType exitTime, TimeDiffType delay, Packet& packet)
+	ServerQueueItem(Time exitTime, TimeDiff delay, Packet& packet)
 		: exit(exitTime), delay(delay), packet(packet)
 	{}
 
-	TimeType getExitTime() const { return exit; }
+	Time getExitTime() const { return exit; }
 
 	const Packet& getPacket() const { return packet; }
 
@@ -40,16 +40,16 @@ public:
 struct SimState
 {
 	// The time and event type of the last action
-	TimeType mcl;
+	Time mcl;
 	EventType event;
 
 	TransferSpeed speed;
-	TimeType nextTransfer;
+	Time nextTransfer;
 	std::deque<Packet> untransferred;
 
 	std::deque<ServerQueueItem> serverQueue;
 
-	TimeType nextConsume;
+	Time nextConsume;
 	std::deque<Packet> clientQueue;
 
 	// Set to UP or DOWN when client transfers happen

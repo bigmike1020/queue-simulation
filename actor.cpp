@@ -16,10 +16,10 @@ using util::begin;
 using util::end;
 
 typedef std::mt19937 rand_engine;
-typedef util::exponential_distribution<TimeDiffType> server_distribution;
-typedef util::exponential_distribution<TimeDiffType> client_distribution;
+typedef util::exponential_distribution<TimeDiff> server_distribution;
+typedef util::exponential_distribution<TimeDiff> client_distribution;
 
-static TimeDiffType time(TransferSpeed speed, const Options& opts)
+static TimeDiff time(TransferSpeed speed, const Options& opts)
 {
 	if (speed == TransferSpeed::HIGH)
 		return opts.arrHigh;
@@ -46,7 +46,7 @@ class UntransferredActor : public Actor
 public:
 
 	UntransferredActor(shared_ptr<rand_engine> rand, 
-		InvTimeDiffType lambda, const Options& opts)
+		InvTimeDiff lambda, const Options& opts)
 		: rand(rand), dist(lambda), opts(opts)
 	{
 		assert(rand && "Rand cannot be null");
@@ -54,7 +54,7 @@ public:
 		assert(lambda > 0.0f);
 	}
 
-	virtual TimeType getTime(const SimState& state) const OVERRIDE
+	virtual Time getTime(const SimState& state) const OVERRIDE
 	{
 		return state.nextTransfer;
 	}
@@ -115,7 +115,7 @@ class ServerQueueActor : public Actor
 public:
 
 	ServerQueueActor(shared_ptr<rand_engine> rand, 
-		InvTimeDiffType lambda, const Options& opts)
+		InvTimeDiff lambda, const Options& opts)
 		: rand(rand), dist(lambda), opts(opts)
 	{
 		assert(rand && "Rand cannot be null");
@@ -123,7 +123,7 @@ public:
 	}
 
 
-	virtual TimeType getTime(const SimState& state) const OVERRIDE
+	virtual Time getTime(const SimState& state) const OVERRIDE
 	{
 		if (state.serverQueue.empty())
 			return TIME_INFINITY;
@@ -194,14 +194,14 @@ class ClientQueueActor : public Actor
 public:
 
 	ClientQueueActor(shared_ptr<rand_engine> rand, 
-		InvTimeDiffType lambda, const Options& opts)
+		InvTimeDiff lambda, const Options& opts)
 		: rand(rand), dist(lambda), opts(opts)
 	{
 		assert(rand && "Rand cannot be null");
 		assert(std::isfinite(lambda));
 	}
 
-	virtual TimeType getTime(const SimState& state) const OVERRIDE
+	virtual Time getTime(const SimState& state) const OVERRIDE
 	{
 		return state.nextConsume;
 	}

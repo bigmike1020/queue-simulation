@@ -4,10 +4,10 @@
 #define OVERRIDE
 #endif
 
-typedef float TimeType;
-typedef float TimeDiffType;
-typedef float InvTimeDiffType;
+typedef float Time;
+typedef float TimeDiff;
+typedef float InvTimeDiff;
 
-extern const TimeType TIME_BEGIN;
-extern const TimeType TIME_INFINITY;
+extern const Time TIME_BEGIN;
+extern const Time TIME_INFINITY;
 

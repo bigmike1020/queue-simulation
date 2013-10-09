@@ -4,10 +4,10 @@
 struct Options
 {
 	int packets;
-	TimeDiffType arrHigh;
-	TimeDiffType arrLow;
-	TimeDiffType meanTimeServerQueue;
-	TimeDiffType meanTimeClientQueue;
+	TimeDiff arrHigh;
+	TimeDiff arrLow;
+	TimeDiff meanTimeServerQueue;
+	TimeDiff meanTimeClientQueue;
 	int thresholdLow;
 	int thresholdHigh;
 	unsigned int seed;
