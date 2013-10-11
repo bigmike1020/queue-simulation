@@ -6,7 +6,7 @@
 using util::begin;
 using util::end;
 
-const char ITEM_FORMAT[] = "%6.2f(%4.2f)";
+const char ITEM_FORMAT[] = "%6.2f(%6.2f) ";
 
 const char* str(TransferSpeed speed)
 {
