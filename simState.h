@@ -65,7 +65,7 @@ struct SimState
 	{
 		PacketFactory factory(opts);
 
-		for (int i = 0; i <= opts.packets; ++i)
+		for (int i = 0; i < opts.packets; ++i)
 		{
 			untransferred.emplace_back(factory());
 		}
