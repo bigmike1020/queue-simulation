@@ -16,10 +16,10 @@ const char* str(TransferSpeed speed)
 const char* str(Flag flag)
 {
 	if(flag == Flag::UP)
-		return "up";
+		return " up ";
 	else if (flag == Flag::DOWN)
 		return "down";
-	return "";
+	return "  - ";
 }
 
 void StateHistory::emplace_back(const SimState& state)
@@ -156,7 +156,7 @@ void StateHistory::boringPrint()
 		auto& queue = it->serverQueue;
 		for(auto it2 = begin(queue); it2 != end(queue); ++it2)
 		{
-			printf(" %7.3f(%4.3f)", it2->getExitTime(), it2->getDelay());
+			printf(" %7.3f(%7.3f)", it2->getExitTime(), it2->getDelay());
 		}
 
 		if(it->nextConsume == TIME_INFINITY)
