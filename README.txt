@@ -1,8 +1,12 @@
 Mike Senn <mpsenn@ncsu.edu>
 ECE 579 Assignment 2
 
-Compile/build by running make. Tested in GCC 4.4.7. Results with standard
-options are in results.txt.
+Unzip with 
+tar -xzf
+Compile/build with
+make
+
+Tested with GCC 4.4.7. Results with standard options are in results.txt.
 
 Usage: ./simulate [options]
 Options:
