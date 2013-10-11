@@ -105,8 +105,10 @@ Options readOptions(int argc, char *argv[])
 			break;
 		case 'v':
 			opts.format = PrintFormat::BORING;
+			break;
 		case '?':
 		default:
+			printf("Unrecognized option\n");
 			printUsage(argc, argv);
 			exit(1);
 			break;
