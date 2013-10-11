@@ -27,4 +27,6 @@ Options:
   --thresHigh   High threshold level in the server queue. 
                 (default T_H=3) 
   --seed        Pseudorandom number generator seed. (default R=45647) 
+  --boring      Print in a boring format that prints the entire state 
+                on one line. 
 
