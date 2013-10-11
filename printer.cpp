@@ -110,3 +110,52 @@ void StateHistory::print()
 		}
 	}
 }
+
+
+void StateHistory::boringPrint()
+{
+	printf( 
+"MCL, Event No, Trans. speed, CL-p, "
+"CL-isq per waiting packet (delay), CL-cq, Νο, flag\n"
+	);
+	
+	for(auto it = begin(history); it != end(history); ++it)
+	{
+		if(it->mcl == TIME_INFINITY)
+		{
+			printf("      -, ");
+		}
+		else
+		{
+			printf("%7.3f, ", it->mcl);
+		}
+
+		printf("%1d, %1s, ", int(it->event), str(it->speed));
+
+		if(it->nextTransfer == TIME_INFINITY)
+		{
+			printf("  -,");
+		}
+		else
+		{
+			printf("%3.0f,", it->nextTransfer);
+		}
+
+		auto& queue = it->queue;
+		for(auto it2 = begin(queue); it2 != end(queue); ++it2)
+		{
+			printf(" %7.3f(%7.3f)", it2->getExitTime(), it2->getDelay());
+		}
+
+		if(it->nextConsume == TIME_INFINITY)
+		{
+			printf(",       -,  0,");
+		}
+		else
+		{
+			printf(", %7.3f, %2zu,", it->nextConsume, it->clientQueue.size());
+		}
+
+		printf("%4s\n", str(it->flag));
+	}
+}
