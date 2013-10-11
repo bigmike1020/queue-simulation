@@ -1,9 +1,6 @@
 #pragma once
 
 #include <cassert>
-#include <deque>
-#include <random>
-#include <string>
 
 #include "defines.h"
 #include "functions.h"
@@ -34,7 +31,7 @@ public:
 
 class PacketFactory
 {
-	std::mt19937 rand_engine;
+	util::rand_engine rand_engine;
 	util::exponential_distribution<TimeDiff> server_dist;
 	util::exponential_distribution<TimeDiff> client_dist;
 public:
