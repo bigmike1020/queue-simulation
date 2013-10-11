@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 		std::sort(begin(actors), end(actors), comp);
 	}
 
-	history.print();
+	history.print(opts);
 
 	return 0;
 }

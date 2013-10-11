@@ -2,6 +2,7 @@
 
 #include <deque>
 
+#include "options.h"
 #include "simState.h"
 
 class StateHistory
@@ -16,5 +17,7 @@ class StateHistory
 public:
 
 	void emplace_back(const SimState& state);
-	void print();
+	void boringPrint();
+	void prettyPrint();
+	void print(const Options& opts);
 };

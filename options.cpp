@@ -12,7 +12,7 @@ Options::Options()
 	packets = 30; arrHigh = 1.0f; arrLow = 2.0f;
 	meanTimeServerQueue = 10.0f; meanTimeClientQueue = 1.5f;
 	thresholdLow = 3; thresholdHigh = 3;
-	seed = 45647;
+	seed = 45647; format = PrintFormat::PRETTY;
 }
 
 void printUsage(int argc, char *argv[])
@@ -42,6 +42,8 @@ void printUsage(int argc, char *argv[])
 "  --thresHigh   High threshold level in the server queue. \n"
 "                (default T_H=3) \n"
 "  --seed        Pseudorandom number generator seed. (default R=45647) \n"
+"  --boring      Print in a boring format that prints the entire state \n"
+"                on one line. \n"
 "\n"
 "Written by Mike Senn <mpsenn@ncsu.edu>\n";
 }
@@ -57,7 +59,7 @@ Options readOptions(int argc, char *argv[])
 		{ "thresLow", required_argument, nullptr, 't' },
 		{ "thresHigh", required_argument, nullptr, 'u' },
 		{ "seed", required_argument, nullptr, 'r' },
-		{ "verbose", no_argument, nullptr, 'v' },
+		{ "boring", no_argument, nullptr, 'v' },
 		{ 0, 0, nullptr, 0 }
 	};
 
@@ -101,6 +103,8 @@ Options readOptions(int argc, char *argv[])
 		case 'r':
 			opts.seed = atoi(optarg);
 			break;
+		case 'v':
+			opts.format = PrintFormat::BORING;
 		case '?':
 		default:
 			printUsage(argc, argv);

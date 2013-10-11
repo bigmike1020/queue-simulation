@@ -1,6 +1,8 @@
 #pragma once
 #include "defines.h"
 
+enum class PrintFormat { PRETTY, BORING };
+
 struct Options
 {
 	int packets;
@@ -11,6 +13,8 @@ struct Options
 	int thresholdLow;
 	int thresholdHigh;
 	unsigned int seed;
+
+	PrintFormat format;
 
 	Options();
 };

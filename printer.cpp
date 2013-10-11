@@ -50,7 +50,19 @@ void printServerQueue(std::deque<ServerQueueItem>& serverQueue)
 	printf("|%35s|", serverStr);
 }
 
-void StateHistory::print()
+void StateHistory::print(const Options& opts)
+{
+	if(opts.format == PrintFormat::PRETTY)
+	{
+		prettyPrint();
+	}
+	else
+	{
+		boringPrint();
+	}
+}
+
+void StateHistory::prettyPrint()
 {
 	printf( 
 "    Actions  |  Server   |       Infinite Server Queue       |"
@@ -141,7 +153,7 @@ void StateHistory::boringPrint()
 			printf("%3.0f,", it->nextTransfer);
 		}
 
-		auto& queue = it->queue;
+		auto& queue = it->serverQueue;
 		for(auto it2 = begin(queue); it2 != end(queue); ++it2)
 		{
 			printf(" %7.3f(%7.3f)", it2->getExitTime(), it2->getDelay());
