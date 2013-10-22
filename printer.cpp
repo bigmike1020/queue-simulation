@@ -47,7 +47,7 @@ void printServerQueue(std::deque<ServerQueueItem>& serverQueue)
 		}
 	}
 	
-	printf("|%35s|", serverStr);
+	printf("|%33s|", serverStr);
 }
 
 void StateHistory::print(const Options& opts)
@@ -65,11 +65,11 @@ void StateHistory::print(const Options& opts)
 void StateHistory::prettyPrint()
 {
 	printf( 
-"    Actions  |  Server   |       Infinite Server Queue       |"
+"    Actions  |   Server    |      Infinite Server Queue      |"
 "  Client Queue   \n"
-"   MCL |Event|Trans.|CL-p|        CL-isq per waiting         |"
+"   MCL |Event|Trans.| CL-p |       CL-isq per waiting        |"
 "CL-cq | Νο. |flag\n"
-"       | No  |Speed |    |          packet (delay)           |"
+"       | No  |Speed |      |         packet (delay)          |"
 "      |queue|    \n"
 	);
 	
@@ -93,11 +93,11 @@ void StateHistory::prettyPrint()
 
 		if(it->nextTransfer == TIME_INFINITY)
 		{
-			printf("  - ");
+			printf("   -  ");
 		}
 		else
 		{
-			printf("%3.0f ", it->nextTransfer);
+			printf("%6.2f", it->nextTransfer);
 		}
 
 		std::deque<ServerQueueItem> serverQueue = it->serverQueue;
@@ -116,7 +116,7 @@ void StateHistory::prettyPrint()
 
 		while(!serverQueue.empty())
 		{
-			printf("                         ");
+			printf("                           ");
 			printServerQueue(serverQueue);
 			printf("\n");
 		}
@@ -128,7 +128,7 @@ void StateHistory::boringPrint()
 {
 	printf( 
 "MCL, Event No, Trans. speed, CL-p, "
-"CL-isq per waiting packet (delay), CL-cq, Νο, flag\n"
+"CL-cq, Νο, flag, CL-isq per waiting packet (delay)\n"
 	);
 	
 	for(auto it = begin(history); it != end(history); ++it)
@@ -146,12 +146,23 @@ void StateHistory::boringPrint()
 
 		if(it->nextTransfer == TIME_INFINITY)
 		{
-			printf("  -,");
+			printf("      -,");
 		}
 		else
 		{
-			printf("%3.0f,", it->nextTransfer);
+			printf("%7.3f,", it->nextTransfer);
 		}
+
+		if(it->nextConsume == TIME_INFINITY)
+		{
+			printf("       -,  0,");
+		}
+		else
+		{
+			printf(" %7.3f, %2zu,", it->nextConsume, it->clientQueue.size());
+		}
+
+		printf("%4s, ", str(it->flag));
 
 		auto& queue = it->serverQueue;
 		for(auto it2 = begin(queue); it2 != end(queue); ++it2)
@@ -159,15 +170,6 @@ void StateHistory::boringPrint()
 			printf(" %7.3f(%7.3f)", it2->getExitTime(), it2->getDelay());
 		}
 
-		if(it->nextConsume == TIME_INFINITY)
-		{
-			printf(",       -,  0,");
-		}
-		else
-		{
-			printf(", %7.3f, %2zu,", it->nextConsume, it->clientQueue.size());
-		}
-
-		printf("%4s\n", str(it->flag));
+		printf("\n");
 	}
 }
