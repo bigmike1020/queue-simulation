@@ -45,7 +45,7 @@ struct SimState
 
 	TransferSpeed speed;
 	Time nextTransfer;
-	std::deque<Packet> untransferred;
+	int untransferredCount;
 
 	std::deque<ServerQueueItem> serverQueue;
 
@@ -60,6 +60,7 @@ struct SimState
 		, event(EventType::TRANSFER)
 		, speed(TransferSpeed::HIGH)
 		, nextTransfer(TIME_INFINITY)
+		, untransferredCount(opts.packets)
 		, nextConsume(TIME_INFINITY)
 		, flag(Flag::NOPRINT)
 	{

@@ -25,11 +25,12 @@ static TimeDiff time(TransferSpeed speed, const Options& opts)
 
 class UntransferredActor : public Actor
 {
+	PacketFactory factory;
 	Options opts;
 
 public:
 
-	UntransferredActor(const Options& opts) : opts(opts)
+	UntransferredActor(const Options& opts) : factory(opts), opts(opts)
 	{}
 
 	virtual Time getTime(const SimState& state) const OVERRIDE
@@ -39,7 +40,7 @@ public:
 
 	virtual void act(SimState& state) OVERRIDE
 	{
-		assert(!state.untransferred.empty() 
+		assert(state.untransferredCount > 0) 
 			&& "untransferred queue shouldn't be empty");
 		assert(state.nextTransfer != TIME_INFINITY 
 			&& "infinite time unexpected");
@@ -49,11 +50,11 @@ public:
 		state.event = EventType::TRANSFER;
 
 		// Get the next untransfered packet
-		Packet packet = state.untransferred.front();
-		state.untransferred.pop_front();
-		
+		auto packet = factory(state.speed, opts);
+		--state.untransferredCount;
+
 		// Record next time for transfer
-		if (state.untransferred.empty())
+		if (state.untransferredCount == 0)
 		{
 			state.nextTransfer = TIME_INFINITY;
 		}
