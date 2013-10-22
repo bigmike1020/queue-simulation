@@ -27,6 +27,7 @@ class Packet
 
 public:
 	
+	TimeDiff getTransferTime() const {return transfer;}
 	TimeDiff getServerTime() const {return server;}
 	TimeDiff getClientTime() const {return client;}
 	

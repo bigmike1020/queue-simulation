@@ -13,16 +13,6 @@ using std::move;
 using util::begin;
 using util::end;
 
-static TimeDiff time(TransferSpeed speed, const Options& opts)
-{
-	if (speed == TransferSpeed::HIGH)
-		return opts.arrHigh;
-	else if (speed == TransferSpeed::LOW)
-		return opts.arrLow;
-	assert(false && "Unrecognized TransferSpeed");
-	return 1.0f;
-}
-
 class UntransferredActor : public Actor
 {
 	PacketFactory factory;
@@ -60,7 +50,7 @@ public:
 		}
 		else
 		{
-			state.nextTransfer += time(state.speed, opts);
+			state.nextTransfer += packet.getTransferTime();
 		}
 
 		// Move untransfered packet into queue
