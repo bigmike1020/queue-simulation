@@ -9,11 +9,8 @@
 #include "packet.h"
 #include "defines.h"
 
-enum class TransferSpeed { HIGH, LOW };
 enum class EventType { TRANSFER = 1, SERVER = 2, CLIENT = 3 };
 enum class Flag { UP, DOWN, NOPRINT };
-
-class Packet;
 
 class ServerQueueItem
 {
@@ -59,19 +56,10 @@ struct SimState
 		: mcl(0.0f)
 		, event(EventType::TRANSFER)
 		, speed(TransferSpeed::HIGH)
-		, nextTransfer(TIME_INFINITY)
+		, nextTransfer(TIME_BEGIN)
 		, untransferredCount(opts.packets)
 		, nextConsume(TIME_INFINITY)
 		, flag(Flag::NOPRINT)
-	{
-		PacketFactory factory(opts);
-
-		for (int i = 0; i < opts.packets; ++i)
-		{
-			untransferred.emplace_back(factory());
-		}
-		
-		nextTransfer = TIME_BEGIN;
-	}
+	{}
 };
 

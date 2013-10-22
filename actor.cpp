@@ -40,7 +40,7 @@ public:
 
 	virtual void act(SimState& state) OVERRIDE
 	{
-		assert(state.untransferredCount > 0) 
+		assert(state.untransferredCount > 0
 			&& "untransferred queue shouldn't be empty");
 		assert(state.nextTransfer != TIME_INFINITY 
 			&& "infinite time unexpected");

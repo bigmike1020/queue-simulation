@@ -6,6 +6,8 @@
 #include "functions.h"
 #include "options.h"
 
+enum class TransferSpeed { HIGH, LOW };
+
 class PacketFactory;
 
 class Packet
