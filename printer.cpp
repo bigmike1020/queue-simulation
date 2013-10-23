@@ -55,9 +55,6 @@ void printServerQueue(std::deque<ServerQueueItem>& serverQueue)
 
 void StateHistory::print(const Options& opts)
 {
-	statPrint();
-	return;
-	/*
 	if(opts.format == PrintFormat::PRETTY)
 	{
 		prettyPrint();
@@ -65,29 +62,7 @@ void StateHistory::print(const Options& opts)
 	else
 	{
 		boringPrint();
-	}*/
-}
-
-void StateHistory::statPrint()
-{
-	std::deque<SimState> states = history;
-	states.erase(begin(states), begin(states) + opts.warmupSize);
-
-	auto start = begin(states);
-
-	assert(int(states.size()) >= opts.batchSize);
-	auto end = start + opts.batchSize;
-
-	while(end != util::end(states))
-	{
-		start = end;
-		assert(int(states.size()) >= opts.batchSize);
-		end = start + opts.batchSize;
 	}
-
-
-	
-
 }
 
 void StateHistory::prettyPrint()

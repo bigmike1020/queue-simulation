@@ -20,6 +20,4 @@ public:
 	void boringPrint();
 	void prettyPrint();
 	void print(const Options& opts);
-
-	void statPrint();
 };
