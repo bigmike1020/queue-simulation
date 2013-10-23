@@ -14,6 +14,9 @@ struct Options
 	int thresholdHigh;
 	unsigned int seed;
 
+	int warmupSize;
+	int batchSize;
+
 	PrintFormat format;
 
 	Options();

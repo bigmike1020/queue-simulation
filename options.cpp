@@ -9,10 +9,12 @@
 
 Options::Options()
 {
-	packets = 30; arrHigh = 1.0f; arrLow = 2.0f;
+	packets = 90000; arrHigh = 1.0f; arrLow = 2.0f;
 	meanTimeServerQueue = 10.0f; meanTimeClientQueue = 1.5f;
-	thresholdLow = 3; thresholdHigh = 3;
+	thresholdLow = 3; thresholdHigh = 6;
 	seed = 45647; format = PrintFormat::PRETTY;
+
+	batchSize = 3000; warmupSize = 500;
 }
 
 void printUsage(int argc, char *argv[])

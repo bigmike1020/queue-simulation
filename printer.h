@@ -7,17 +7,19 @@
 
 class StateHistory
 {
+	Options opts;
+
 	std::deque<SimState> history;
 
-	int mclSize;
-	int clpSize;
-	int clcqSize;
-	int clientQueueSize;
-
 public:
+
+	StateHistory(const Options& opts) : opts(opts)
+	{}
 
 	void emplace_back(const SimState& state);
 	void boringPrint();
 	void prettyPrint();
 	void print(const Options& opts);
+
+	void statPrint();
 };

@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 	Options opts = readOptions(argc, argv);
 
 	SimState state{opts};
-	StateHistory history;
+	StateHistory history{opts};
 	history.emplace_back(state);
 
 	Comparator<SimState*> comp(&state);

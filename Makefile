@@ -1,6 +1,6 @@
 
 CC=g++
-CFLAGS=-std=c++0x -Os -Wall
+CFLAGS=-std=c++0x -Wall
 
 default: simulate
 
