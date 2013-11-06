@@ -186,30 +186,81 @@ struct Bounds
 	TimeDiff median;
 	TimeDiff higher;
 	TimeDiff max;
-	
-	TimeDiff mean;
 };
+
+TimeDiff higherSum(TimeDiff init, Bounds& b)
+{
+	return init + b.higher;
+}
+
+TimeDiff higherProduct(Bounds& b1, Bounds& b2)
+{
+	return b1.higher * b2.higher;
+}
+
+struct SubtractAndSquare
+{
+	TimeDiff mean;
+	explicit SubtractAndSquare(TimeDiff mean) : mean(mean) {}
+	TimeDiff operator()(TimeDiff init, Bounds& b)
+	{
+		TimeDiff diff = (mean - b.higher);
+		return init + (diff * diff);
+	}
+};
+
+void printStats(std::deque<Bounds>& intervals, Options& opts)
+{
+	auto& b = intervals;
+	
+	TimeDiff sum = std::accumulate(begin(b), end(b), 0.0, higherSum);
+	TimeDiff mean = sum / b.size();
+
+	TimeDiff sq_diff = std::accumulate(begin(b), end(b), 0.0, 
+		SubtractAndSquare{mean});
+	TimeDiff stdev = std::sqrt(sq_diff / (b.size() - 1));
+	
+	printf("Mean=%lf, Std Deviation=%lf\n", mean, stdev);
+	
+	auto range = 1.96 * stdev / std::sqrt(intervals.size());
+	auto lowerConf = mean - range;
+	auto higherConf = mean + range;
+	
+	if(range < (0.10 * mean))
+	{
+		printf("Error %lf is small; batch size sufficient.\n", range);
+	}
+	else
+	{
+		printf("Error %lf is large; increase batch size.\n", range);
+	}
+	
+	printf("95.0%% confidence interval (%lf, %lf)\n", lowerConf, higherConf);
+	
+	for(auto it = begin(b); it != end(b); ++it)
+	{
+		printf("%lf\n", it->higher);
+	}
+
+}
 
 void printPacketStats(SimState& state, Options opts)
 {
-	//printf("I have %lu packets.\n", state.finishedPackets.size());
-	
 	auto& packets = state.finishedPackets;
 	
-	std::deque<Bounds> intervals;
-	
-	//printf("First  start=%lf finish=%lf\n", packets.at(0).start, packets.at(0).finish);
-	//printf("Second start=%lf finish=%lf\n", packets.at(1).start, packets.at(1).finish);
-	//printf("Third  start=%lf finish=%lf\n", packets.at(2).start, packets.at(2).finish);
-	
-	
 	// First marks the beginning of the current batch
+	printf("Total %lu packets. Skipping first %d packets.\n", 
+		packets.size(), opts.warmupSize);
+	
 	auto first = begin(packets);
 	for(int i=0; i < opts.warmupSize; ++i)
 	{
 		++first;
 		assert(first != end(packets));
 	}
+
+	std::deque<Bounds> intervals;
+	std::deque<TimeDiff> endToEnds;
 	
 	for(auto curr = first; curr != end(packets); )
 	{
@@ -219,6 +270,8 @@ void printPacketStats(SimState& state, Options opts)
 		{
 			auto delay = curr->finish - curr->start;
 			delays.emplace_back(delay);
+			if(endToEnds.size() < 30000) endToEnds.emplace_back(delay);
+			
 			++curr;
 			if(curr == end(packets)) break;
 		}
@@ -229,6 +282,7 @@ void printPacketStats(SimState& state, Options opts)
 
 		auto lowBound = int(floor(opts.batchSize*(1-opts.percentile)));
 		auto highBound = int(ceil(opts.batchSize * opts.percentile));
+		highBound = std::min(highBound, int(delays.size()-1));
 		
 		Bounds bound;
 		bound.min = delays.at(0);
@@ -236,20 +290,18 @@ void printPacketStats(SimState& state, Options opts)
 		bound.median = delays.at(delays.size()/2);
 		bound.higher = delays.at(highBound);
 		bound.max = delays.at(delays.size()-1);
-		
-		auto& v = delays;
-		double sum = std::accumulate(v.begin(), v.end(), 0.0);
-		bound.mean = sum / v.size();
-		
 		intervals.emplace_back(bound);
 
 		if(curr == end(packets)) break;
 	}
+
+	auto sum = std::accumulate(begin(endToEnds), end(endToEnds), 0.0);
+	printf("Mean end-to-end delay %lf.\n", sum/endToEnds.size());
 	
-	for(auto it = begin(intervals); it != end(intervals); ++it)
-	{
-		printf("%lf\n", it->higher);
-	}
+	printf("Collected %lu batches of %d packets.\n", 
+		intervals.size(), opts.batchSize);
+	printf("Displaying %4.1lf%% percentiles.\n", opts.percentile * 100.0);
 	
+	printStats(intervals, opts);
 	
 }

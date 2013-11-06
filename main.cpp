@@ -55,6 +55,9 @@ int main(int argc, char *argv[])
 
 	std::sort(begin(actors), end(actors), comp);
 	std::shared_ptr<Actor> nextActor;
+	
+	printf("Simulating queue states.\n");
+	
 	while (!(nextActor = actors.front())->finished(state))
 	{
 		auto now = nextActor->getTime(state);

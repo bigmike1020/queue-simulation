@@ -77,12 +77,12 @@ public:
 	
 	virtual void print()
 	{
-		auto& v = transfers;
-		double sum = std::accumulate(v.begin(), v.end(), 0.0);
-		double mean = sum / v.size();
+		//auto& v = transfers;
+		//double sum = std::accumulate(v.begin(), v.end(), 0.0);
+		//double mean = sum / v.size();
 
-		double sq_sum = std::inner_product(v.begin(), v.end(), v.begin(), 0.0);
-		double stdev = std::sqrt(sq_sum / v.size() - mean * mean);
+		//double sq_sum = std::inner_product(v.begin(), v.end(), v.begin(), 0.0);
+		//double stdev = std::sqrt(sq_sum / v.size() - mean * mean);
 		
 		// std::cout << "mean=" << mean << " stdev=" << stdev << std::endl;
 	}

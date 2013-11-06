@@ -27,7 +27,7 @@ void printUsage(int argc, char *argv[])
 "Options:\n"
 "  -p \n"
 "  --packets     Number of packets that departed from the client queue. \n"
-"                (default N=30) \n"
+"                (default N=90000) \n"
 "  -h \n"
 "  --arrHigh     Time to transmit a packet from the server at high rate. \n"
 "                (default D_H=1.0) \n"
@@ -43,10 +43,9 @@ void printUsage(int argc, char *argv[])
 "  --thresLow    Low threshold level in the server queue. \n"
 "                (default T_L=3) \n"
 "  --thresHigh   High threshold level in the server queue. \n"
-"                (default T_H=3) \n"
+"                (default T_H=6) \n"
+"  --batchSize   Size of the batches (default 3000)\n"
 "  --seed        Pseudorandom number generator seed. (default R=45647) \n"
-"  --boring      Print in a boring format that prints the entire state \n"
-"                on one line. \n"
 "\n"
 "Written by Mike Senn <mpsenn@ncsu.edu>\n";
 }
@@ -62,6 +61,7 @@ Options readOptions(int argc, char *argv[])
 		{ "thresLow", required_argument, nullptr, 't' },
 		{ "thresHigh", required_argument, nullptr, 'u' },
 		{ "seed", required_argument, nullptr, 'r' },
+		{ "batchSize", required_argument, nullptr, 'b' },
 		{ "boring", no_argument, nullptr, 'v' },
 		{ 0, 0, nullptr, 0 }
 	};
@@ -106,6 +106,8 @@ Options readOptions(int argc, char *argv[])
 		case 'r':
 			opts.seed = atoi(optarg);
 			break;
+		case 'b':
+			opts.batchSize = atoi(optarg);
 		case 'v':
 			opts.format = PrintFormat::BORING;
 			break;
@@ -134,6 +136,7 @@ Options readOptions(int argc, char *argv[])
 	assert(opts.thresholdHigh >= 0 && "High threshold must be >= 0");
 	assert(opts.thresholdLow <= opts.thresholdHigh 
 		&& "Low threshold cannot be greater than high threshold");
+	assert(opts.batchSize > 0 && "Batch size invalid");
 
 	return opts;
 }
