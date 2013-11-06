@@ -176,3 +176,8 @@ void StateHistory::boringPrint()
 		printf("\n");
 	}
 }
+
+void printPacketStats(const SimState& state, const Options& opts)
+{
+	printf("I have %lu packets.\n", state.finishedPackets.size());
+}

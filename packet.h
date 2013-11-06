@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cassert>
-
 #include "defines.h"
 #include "functions.h"
 #include "options.h"
@@ -16,20 +14,17 @@ class Packet
 	TimeDiff transfer;
 	TimeDiff server;
 	TimeDiff client;
-	
-	Packet(TimeDiff transfer, TimeDiff server, TimeDiff client)
-		: transfer(transfer), server(server), client(client)
-	{
-		assert(transfer > 0 && "Time spent in queue must be > 0");
-		assert(server > 0 && "Time spent in queue must be > 0");
-		assert(client > 0 && "Time spent in queue must be > 0");
-	}
+
+	Packet(TimeDiff transfer, TimeDiff server, TimeDiff client);
 
 public:
 	
 	TimeDiff getTransferTime() const {return transfer;}
 	TimeDiff getServerTime() const {return server;}
 	TimeDiff getClientTime() const {return client;}
+
+	Time start;
+	Time finish;
 	
 	friend class PacketFactory;
 };

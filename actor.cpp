@@ -18,13 +18,17 @@ class UntransferredActor : public Actor
 	PacketFactory factory;
 	Options opts;
 
+	Packet nextPacket;
 public:
 
-	UntransferredActor(const Options& opts) : factory(opts), opts(opts)
+	UntransferredActor(const Options& opts) : factory(opts), opts(opts),
+		nextPacket(factory(TransferSpeed::HIGH, opts))
 	{}
 
 	virtual Time getTime(const SimState& state) const OVERRIDE
 	{
+		if(state.nextTransfer == TIME_BEGIN)
+			return (state.nextTransfer + nextPacket.getTransferTime());
 		return state.nextTransfer;
 	}
 
@@ -32,7 +36,7 @@ public:
 	{
 		assert(state.untransferredCount > 0
 			&& "untransferred queue shouldn't be empty");
-		assert(state.nextTransfer != TIME_INFINITY 
+		assert(state.nextTransfer != TIME_INFINITY
 			&& "infinite time unexpected");
 
 		auto now = state.nextTransfer;
@@ -40,7 +44,7 @@ public:
 		state.event = EventType::TRANSFER;
 
 		// Get the next untransfered packet
-		auto packet = factory(state.speed, opts);
+		auto packet = nextPacket;
 		--state.untransferredCount;
 
 		// Record next time for transfer
@@ -50,8 +54,12 @@ public:
 		}
 		else
 		{
-			state.nextTransfer += packet.getTransferTime();
+			nextPacket = factory(state.speed, opts);
+			state.nextTransfer += nextPacket.getTransferTime();
 		}
+
+		// Record this packet's start time
+		packet.start = now;
 
 		// Move untransfered packet into queue
 		auto delay = packet.getServerTime();
@@ -164,6 +172,10 @@ public:
 		state.event = EventType::CLIENT;
 
 		// Consume one packet on client
+		auto& packet = state.clientQueue.front();
+		assert(packet.start != TIME_BEGIN);
+		packet.finish = now;
+		state.finishedPackets.emplace_front(packet);
 		state.clientQueue.pop_front();
 
 		// Set time for next consume

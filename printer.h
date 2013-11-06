@@ -21,3 +21,5 @@ public:
 	void prettyPrint();
 	void print(const Options& opts);
 };
+
+void printPacketStats(const SimState& state, const Options& opts);

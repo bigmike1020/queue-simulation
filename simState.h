@@ -52,6 +52,8 @@ struct SimState
 	// Set to UP or DOWN when client transfers happen
 	Flag flag;
 
+	std::deque<Packet> finishedPackets;
+
 	SimState(const Options& opts)
 		: mcl(0.0f)
 		, event(EventType::TRANSFER)

@@ -1,5 +1,16 @@
 #include "packet.h"
 
+#include <cassert>
+
+Packet::Packet(TimeDiff transfer, TimeDiff server, TimeDiff client)
+	: transfer(transfer), server(server), client(client), 
+	start(TIME_BEGIN), finish(TIME_BEGIN)
+{
+	assert(transfer > 0 && "Time spent in queue must be > 0");
+	assert(server > 0 && "Time spent in queue must be > 0");
+	assert(client > 0 && "Time spent in queue must be > 0");
+}
+
 PacketFactory::PacketFactory(const Options& opts)
 	: rand_engine(opts.seed)
 	, transfer_dist_fast(1.0f / opts.arrHigh)
