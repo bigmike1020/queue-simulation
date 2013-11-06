@@ -192,7 +192,7 @@ struct Bounds
 
 void printPacketStats(SimState& state, Options opts)
 {
-	printf("I have %lu packets.\n", state.finishedPackets.size());
+	//printf("I have %lu packets.\n", state.finishedPackets.size());
 	
 	auto& packets = state.finishedPackets;
 	
