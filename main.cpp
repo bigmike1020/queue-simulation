@@ -47,8 +47,8 @@ int main(int argc, char *argv[])
 	Options opts = readOptions(argc, argv);
 
 	SimState state{opts};
-	//StateHistory history{opts};
-	//history.emplace_back(state);
+	StateHistory history{opts};
+	history.emplace_back(state);
 
 	Comparator<SimState*> comp(&state);
 	auto actors = MakeActorList(opts);
@@ -62,9 +62,14 @@ int main(int argc, char *argv[])
 		assert(now < TIME_INFINITY);
 
 		nextActor->act(state);
-		//history.emplace_back(state);
+		if(history.size() < 20) history.emplace_back(state);
 
 		std::sort(begin(actors), end(actors), comp);
+	}
+	
+	for(auto it=actors.begin(); it != actors.end(); ++it)
+	{
+		(*it)->print();
 	}
 
 	//history.print(opts);

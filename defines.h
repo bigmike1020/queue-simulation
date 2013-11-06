@@ -8,10 +8,11 @@
 #define nullptr NULL
 #endif
 
-typedef float Time;
-typedef float TimeDiff;
-typedef float InvTimeDiff;
+typedef double Time;
+typedef double TimeDiff;
+typedef double InvTimeDiff;
 
+extern const Time TIME_ZERO;
 extern const Time TIME_BEGIN;
 extern const Time TIME_INFINITY;
 

@@ -2,9 +2,11 @@
 
 #include <cassert>
 
+#include "defines.h"
+
 Packet::Packet(TimeDiff transfer, TimeDiff server, TimeDiff client)
 	: transfer(transfer), server(server), client(client), 
-	start(TIME_BEGIN), finish(TIME_BEGIN)
+	start(TIME_ZERO), finish(TIME_ZERO)
 {
 	assert(transfer > 0 && "Time spent in queue must be > 0");
 	assert(server > 0 && "Time spent in queue must be > 0");

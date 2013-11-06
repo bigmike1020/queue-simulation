@@ -48,7 +48,7 @@ namespace util{
 			}
 
 			template<typename R>
-			float operator()(R&& rand) const{
+			Number operator()(R& rand) const{
 					Number size = rand.max() - rand.min();
 					Number num = (rand() - rand.min()) / size;
 					return -log(num) / lambda;

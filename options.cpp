@@ -15,6 +15,7 @@ Options::Options()
 	seed = 45647; format = PrintFormat::PRETTY;
 
 	batchSize = 3000; warmupSize = 500;
+	percentile = 0.95f;
 }
 
 void printUsage(int argc, char *argv[])

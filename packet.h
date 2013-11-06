@@ -1,5 +1,7 @@
 #pragma once
 
+#include <random>
+
 #include "defines.h"
 #include "functions.h"
 #include "options.h"
@@ -31,7 +33,7 @@ public:
 
 class PacketFactory
 {
-	util::rand_engine rand_engine;
+	std::minstd_rand rand_engine;
 	util::exponential_distribution<TimeDiff> transfer_dist_fast;
 	util::exponential_distribution<TimeDiff> transfer_dist_slow;
 	util::exponential_distribution<TimeDiff> server_dist;

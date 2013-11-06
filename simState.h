@@ -59,7 +59,7 @@ struct SimState
 		, event(EventType::TRANSFER)
 		, speed(TransferSpeed::HIGH)
 		, nextTransfer(TIME_BEGIN)
-		, untransferredCount(opts.packets)
+		, untransferredCount(opts.packets + opts.warmupSize)
 		, nextConsume(TIME_INFINITY)
 		, flag(Flag::NOPRINT)
 	{}

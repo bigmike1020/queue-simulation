@@ -16,6 +16,8 @@ struct Options
 
 	int warmupSize;
 	int batchSize;
+	
+	float percentile;
 
 	PrintFormat format;
 

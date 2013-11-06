@@ -21,6 +21,8 @@ namespace Actors
 
 		virtual Time getTime(const SimState& state) const = 0;
 		virtual void act(SimState& state) = 0;
+		
+		virtual void print() {}
 
 		virtual ~Actor() {}
 	};

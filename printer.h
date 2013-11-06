@@ -16,10 +16,12 @@ public:
 	StateHistory(const Options& opts) : opts(opts)
 	{}
 
+	size_t size() const { return history.size(); }
+	
 	void emplace_back(const SimState& state);
 	void boringPrint();
 	void prettyPrint();
 	void print(const Options& opts);
 };
 
-void printPacketStats(const SimState& state, const Options& opts);
+void printPacketStats(SimState& state, Options opts);

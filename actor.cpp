@@ -1,6 +1,8 @@
 #include "actor.h"
 
 #include <algorithm>
+#include <iostream>
+#include <numeric>
 
 #include "functions.h"
 #include "simState.h"
@@ -13,6 +15,8 @@ using std::move;
 using util::begin;
 using util::end;
 
+std::deque<TimeDiff> transfers;
+
 class UntransferredActor : public Actor
 {
 	PacketFactory factory;
@@ -23,7 +27,9 @@ public:
 
 	UntransferredActor(const Options& opts) : factory(opts), opts(opts),
 		nextPacket(factory(TransferSpeed::HIGH, opts))
-	{}
+	{
+		nextPacket.start = TIME_BEGIN;
+	}
 
 	virtual Time getTime(const SimState& state) const OVERRIDE
 	{
@@ -55,11 +61,10 @@ public:
 		else
 		{
 			nextPacket = factory(state.speed, opts);
+			nextPacket.start = now;
 			state.nextTransfer += nextPacket.getTransferTime();
+			transfers.push_back(nextPacket.getTransferTime());
 		}
-
-		// Record this packet's start time
-		packet.start = now;
 
 		// Move untransfered packet into queue
 		auto delay = packet.getServerTime();
@@ -68,6 +73,18 @@ public:
 		std::sort(begin(state.serverQueue), end(state.serverQueue));
 
 		state.flag = Flag::NOPRINT;
+	}
+	
+	virtual void print()
+	{
+		auto& v = transfers;
+		double sum = std::accumulate(v.begin(), v.end(), 0.0);
+		double mean = sum / v.size();
+
+		double sq_sum = std::inner_product(v.begin(), v.end(), v.begin(), 0.0);
+		double stdev = std::sqrt(sq_sum / v.size() - mean * mean);
+		
+		// std::cout << "mean=" << mean << " stdev=" << stdev << std::endl;
 	}
 
 };
@@ -173,9 +190,9 @@ public:
 
 		// Consume one packet on client
 		auto& packet = state.clientQueue.front();
-		assert(packet.start != TIME_BEGIN);
+		assert(packet.start != TIME_ZERO);
 		packet.finish = now;
-		state.finishedPackets.emplace_front(packet);
+		state.finishedPackets.emplace_back(packet);
 		state.clientQueue.pop_front();
 
 		// Set time for next consume
