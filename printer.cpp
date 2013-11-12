@@ -301,6 +301,7 @@ void printPacketStats(SimState& state, Options opts)
 	printf("Collected %lu batches of %d packets.\n", 
 		intervals.size(), opts.batchSize);
 	printf("Displaying %4.1lf%% percentiles.\n", opts.percentile * 100.0);
+	printf("Simulation ended at %lf time.\n", packets.rbegin()->finish);
 	
 	printStats(intervals, opts);
 	
